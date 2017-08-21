@@ -1,9 +1,14 @@
-import React, {Component} from 'react'
+/* Main Elements */
 
-export default class extends Component {
-  render() {
-    return <div>
-      <h2>Welcome to React components</h2>
-    </div>
-  }
-}
+import ErrorMessage from './ErrorMessage';
+import Form from './Form';
+import InputWrapper from './InputWrapper';
+import ArbitraryValidator from './ArbitraryValidator';
+
+export {
+  ErrorMessage,
+  InputWrapper,
+  ArbitraryValidator
+};
+
+export default Form;
