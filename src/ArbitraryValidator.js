@@ -85,6 +85,12 @@ class ArbitraryValidator extends Component {
     return isValid;
   }
 
+  validateCurrentValue() {
+    if (this.state.validatedOnce || this.props.validateBeforeFirstBlur) {
+      this.validate( this.getValue() );
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value)) {
       this.validateFlag = true;

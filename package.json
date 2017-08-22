@@ -25,6 +25,7 @@
     "react": "15.x"
   },
   "devDependencies": {
+    "immutability-helper": "^2.3.1",
     "nwb": "0.18.x",
     "react": "^15.6.1",
     "react-dom": "^15.6.1"

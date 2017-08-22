@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom';
+import update from 'immutability-helper';
 
 import Form, { InputWrapper, ErrorMessage, ArbitraryValidator } from '../../src';
 import { isRequired, isInteger, isMaxLength, isMinLength } from './helpers/validation';
 
-import every from 'lodash/every';
+import some from 'lodash/some';
 import findIndex from 'lodash/findIndex';
 
 class Demo extends Component {
@@ -25,7 +26,9 @@ class Demo extends Component {
 
   onCheckboxChange(e) {
     const likeIndex = findIndex(this.state.likes, ['name', e.target.name]);
-    this.setState({ likes: this.state.likes.splice(likeIndex, 1) })
+    this.setState({
+      likes: update(this.state.likes, { [likeIndex]: { checked: { $set: e.target.checked } } })
+    });
   }
 
   render() {
@@ -99,8 +102,8 @@ class Demo extends Component {
             value={likes}
             validate={[{
               test: (value) => {
-                console.log(every(value, 'checked'));
-                return every(value, 'checked');
+                console.log(some(value, 'checked'));
+                return some(value, 'checked');
               },
               message: 'Please select at least one.'
             }]} />
