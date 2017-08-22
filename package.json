@@ -20,11 +20,11 @@
     "test:watch": "nwb test-react --server"
   },
   "lint-staged": {
-    "./src/**/*.js": [
+    "src/*.js": [
       "prettier --write",
       "git add"
     ],
-    "./demo/src/**/*.js": [
+    "demo/src/*.js": [
       "prettier --write",
       "git add"
     ]
