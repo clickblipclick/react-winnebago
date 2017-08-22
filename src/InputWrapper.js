@@ -1,9 +1,8 @@
-import React, { Component, Children } from 'react';
-import PropTypes from 'prop-types';
-import isFunction from 'lodash/isFunction';
+import React, { Component, Children } from "react";
+import PropTypes from "prop-types";
+import isFunction from "lodash/isFunction";
 
 class InputWrapper extends Component {
-
   constructor(props) {
     super(props);
 
@@ -21,13 +20,6 @@ class InputWrapper extends Component {
     this.context.registerWrapper(this);
   }
 
-  componentWillUnmount() {
-    if (typeof this.refs.input !== 'undefined' && isFunction(this.refs.input.blur)) {
-      this.refs.input.blur();
-    }
-    this.context.unregisterWrapper(this);
-  }
-
   componentWillUpdate(nextProps) {
     const { name } = this.props;
     if (name !== nextProps.name) {
@@ -37,22 +29,34 @@ class InputWrapper extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { isValid, validatedOnce } = this.state;
-    if (prevState.isValid !== isValid || !prevState.validatedOnce && validatedOnce) {
+    if (
+      prevState.isValid !== isValid ||
+      (!prevState.validatedOnce && validatedOnce)
+    ) {
       this.props.onValidationStatusChange(isValid);
     }
+  }
+
+  componentWillUnmount() {
+    if (
+      typeof this.refs.input !== "undefined" &&
+      isFunction(this.refs.input.blur)
+    ) {
+      this.refs.input.blur();
+    }
+    this.context.unregisterWrapper(this);
   }
 
   storeOriginalProps() {
     const inputComponent = Children.only(this.props.children);
     for (var prop in inputComponent.props) {
-      let newPropName = `_${prop}`
+      let newPropName = `_${prop}`;
       this[newPropName] = inputComponent.props[prop];
     }
   }
 
   getValue() {
     const { valueProp, children } = this.props;
-    const { input } = this.refs;
     // If you need to run validations on a different prop than 'value', you can set valueProp
     return Children.only(children).props[valueProp];
   }
@@ -61,15 +65,15 @@ class InputWrapper extends Component {
     const { validate, name } = this.props;
     // Assume this is valid.
     let isValid = true;
-    let messageText = '';
+    let messageText = "";
     // If undefined use current value
-    const val = (typeof value !== 'undefined') ? value : this.getValue();
+    const val = typeof value !== "undefined" ? value : this.getValue();
 
     // Go through defined validations and execute them.
     for (var validation in validate) {
       const { test, params, message } = validate[validation];
-      if (typeof test !== 'function') {
-        throw new Error('Validation type does not exist.');
+      if (typeof test !== "function") {
+        throw new Error("Validation type does not exist.");
       } else {
         var argArray = [val];
 
@@ -77,11 +81,9 @@ class InputWrapper extends Component {
           argArray = argArray.concat(params);
         }
 
-        if (typeof test === 'function') {
-          if (!test.apply(this, argArray)) {
-            isValid = false;
-            messageText = message;
-          }
+        if (typeof test === "function" && !test.apply(this, argArray)) {
+          isValid = false;
+          messageText = message;
         }
       }
     }
@@ -95,18 +97,18 @@ class InputWrapper extends Component {
 
   isCheckbox() {
     const inputComponent = Children.only(this.props.children);
-    return (typeof inputComponent.props.checked === 'undefined');
+    return typeof inputComponent.props.checked === "undefined";
   }
 
   validateValue(value) {
     if (this.state.validatedOnce || this.props.validateBeforeFirstBlur) {
-      this.validate( value );
+      this.validate(value);
     }
   }
 
   validateCurrentValue() {
     if (this.state.validatedOnce || this.props.validateBeforeFirstBlur) {
-      this.validate( this.getValue() );
+      this.validate(this.getValue());
     }
   }
 
@@ -117,20 +119,28 @@ class InputWrapper extends Component {
   }
 
   onBlur(e) {
-    if (isFunction(this._onBlur)) { this._onBlur(e); }
+    if (isFunction(this._onBlur)) {
+      this._onBlur(e);
+    }
 
     this.validateCurrentValue();
   }
 
   onFocus(e) {
-    if (isFunction(this._onFocus)) { this._onFocus(e); }
+    if (isFunction(this._onFocus)) {
+      this._onFocus(e);
+    }
   }
 
   onChange(e) {
-    if (isFunction(this._onChange)) { this._onChange(e); }
-    if (isFunction(this.context.onChange)) { this.context.onChange(e); }
+    if (isFunction(this._onChange)) {
+      this._onChange(e);
+    }
+    if (isFunction(this.context.onChange)) {
+      this.context.onChange(e);
+    }
 
-    this.validateValue( e.target.value );
+    this.validateValue(e.target.value);
   }
 
   render() {
@@ -142,25 +152,30 @@ class InputWrapper extends Component {
 
     const classNames = [inputComponent.props.className];
 
-    if (!this.state.isValid && this.state.validatedOnce) {
+    if (!isValid && validatedOnce) {
       classNames.push(invalidClassName);
     }
 
     const props = {
-      className: classNames.join(' '),
-      ref: 'input',
+      className: classNames.join(" "),
+      ref: "input",
       onBlur: this.onBlur.bind(this),
       onFocus: this.onFocus.bind(this),
-      onChange: this.onChange.bind(this),
+      onChange: this.onChange.bind(this)
     };
 
-    if ((inputComponent.props.type === 'radio' || inputComponent.props.type === 'checkbox') && this.isCheckbox()) {
-      Object.assign(props, { checked: this.context.isChecked(inputComponent.props.value) })
+    if (
+      (inputComponent.props.type === "radio" ||
+        inputComponent.props.type === "checkbox") &&
+      this.isCheckbox()
+    ) {
+      Object.assign(props, {
+        checked: this.context.isChecked(inputComponent.props.value)
+      });
     }
 
     return React.cloneElement(inputComponent, props);
   }
-
 }
 
 InputWrapper.contextTypes = {
@@ -173,25 +188,26 @@ InputWrapper.contextTypes = {
 };
 
 InputWrapper.defaultProps = {
-  invalidClassName: 'invalid',
+  invalidClassName: "invalid",
   validateBeforeFirstBlur: false,
-  valueProp: 'value',
+  valueProp: "value",
   onValidationStatusChange: function() {}
 };
 
 InputWrapper.propTypes = {
   name: PropTypes.string.isRequired,
-  validate: PropTypes.arrayOf(PropTypes.shape({
-    test: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.func
-    ]).isRequired,
-    params: PropTypes.any,
-    message: PropTypes.string
-  })).isRequired,
+  validate: PropTypes.arrayOf(
+    PropTypes.shape({
+      test: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+      params: PropTypes.any,
+      message: PropTypes.string
+    })
+  ).isRequired,
+  invalidClassName: PropTypes.string,
+  validateBeforeFirstBlur: PropTypes.bool.isRequired,
   onValidationStatusChange: PropTypes.func.isRequired,
   valueProp: PropTypes.string.isRequired,
   children: PropTypes.element.isRequired
-}
+};
 
 export default InputWrapper;

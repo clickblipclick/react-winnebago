@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 class ErrorMessage extends Component {
-
   constructor(props) {
     super(props);
     this.state = { isActive: false };
@@ -18,7 +17,7 @@ class ErrorMessage extends Component {
 
   getElementProps() {
     const props = Object.assign({}, this.props);
-    if (props.element === 'label') {
+    if (props.element === "label") {
       props.htmlFor = props.for;
     }
     delete props.element;
@@ -36,16 +35,23 @@ class ErrorMessage extends Component {
 
   render() {
     if (this.state.isActive) {
-      return React.createElement(this.props.element, this.getElementProps(), this.state.message);
+      return React.createElement(
+        this.props.element,
+        this.getElementProps(),
+        this.state.message
+      );
     } else {
       return null;
     }
   }
-
 }
 
 ErrorMessage.defaultProps = {
-  element: 'label'
+  element: "label"
+};
+
+ErrorMessage.propTypes = {
+  element: PropTypes.oneOf(["div", "label", "span", "aside", "section"])
 };
 
 ErrorMessage.contextTypes = {

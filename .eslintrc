@@ -1,9 +1,13 @@
 {
-  "extends": "react",
+  "extends": [
+    "react",
+    "prettier"
+  ],
   "plugins": [
     "prettier"
   ],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "prefer-reflect": 0
   }
 }

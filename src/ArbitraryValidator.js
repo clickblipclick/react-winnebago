@@ -1,12 +1,11 @@
-import React, { Component, Children } from 'react';
-import PropTypes from 'prop-types';
-import isFunction from 'lodash/isFunction';
+import React, { Component, Children } from "react";
+import PropTypes from "prop-types";
+import isFunction from "lodash/isFunction";
 
 class ArbitraryValidator extends Component {
-
   constructor(props) {
     super(props);
-    
+
     this.state = {
       validatedOnce: false,
       isValid: false
@@ -17,11 +16,12 @@ class ArbitraryValidator extends Component {
     this.context.registerWrapper(this);
   }
 
-  componentWillUnmount() {
-    if (typeof this.refs.input !== 'undefined' && isFunction(this.refs.input.blur)) {
-      this.refs.input.blur();
+  componentWillReceiveProps(nextProps) {
+    if (JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value)) {
+      this.validateFlag = true;
+    } else {
+      this.validateFlag = false;
     }
-    this.context.unregisterWrapper(this);
   }
 
   componentWillUpdate(nextProps) {
@@ -38,10 +38,20 @@ class ArbitraryValidator extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (
+      typeof this.refs.input !== "undefined" &&
+      isFunction(this.refs.input.blur)
+    ) {
+      this.refs.input.blur();
+    }
+    this.context.unregisterWrapper(this);
+  }
+
   storeOriginalProps() {
     const inputComponent = Children.only(this.props.children);
     for (var prop in inputComponent.props) {
-      let newPropName = `_${prop}`
+      let newPropName = `_${prop}`;
       this[newPropName] = inputComponent.props[prop];
     }
   }
@@ -54,15 +64,15 @@ class ArbitraryValidator extends Component {
     const { validate, name } = this.props;
     // Assume this is valid.
     let isValid = true;
-    let messageText = '';
+    let messageText = "";
     // If undefined use current value
-    const val = (typeof value !== 'undefined') ? value : this.getValue();
+    const val = typeof value !== "undefined" ? value : this.getValue();
 
     // Go through defined validations and execute them.
     for (var validation in validate) {
       const { test, params, message } = validate[validation];
-      if (typeof test !== 'function') {
-        throw new Error('Validation type does not exist.');
+      if (typeof test !== "function") {
+        throw new Error("Validation type does not exist.");
       } else {
         var argArray = [val];
 
@@ -70,11 +80,9 @@ class ArbitraryValidator extends Component {
           argArray = argArray.concat(params);
         }
 
-        if (typeof test === 'function') {
-          if (!test.apply(this, argArray)) {
-            isValid = false;
-            messageText = message;
-          }
+        if (typeof test === "function" && !test.apply(this, argArray)) {
+          isValid = false;
+          messageText = message;
         }
       }
     }
@@ -88,24 +96,15 @@ class ArbitraryValidator extends Component {
 
   validateCurrentValue() {
     if (this.state.validatedOnce || this.props.validateBeforeFirstBlur) {
-      this.validate( this.getValue() );
+      this.validate(this.getValue());
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value)) {
-      this.validateFlag = true;
-    } else {
-      this.validateFlag = false;
-    }
-  }
-
-  focus() { }
+  focus() {}
 
   render() {
     return null;
   }
-
 }
 
 ArbitraryValidator.contextTypes = {
@@ -118,24 +117,30 @@ ArbitraryValidator.contextTypes = {
 };
 
 ArbitraryValidator.defaultProps = {
-  invalidClassName: 'invalid',
+  invalidClassName: "invalid",
   validateBeforeFirstBlur: false,
-  valueProp: 'value',
   onValidationStatusChange: function() {}
 };
 
 ArbitraryValidator.propTypes = {
   name: PropTypes.string.isRequired,
-  validate: PropTypes.arrayOf(PropTypes.shape({
-    test: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.func
-    ]).isRequired,
-    params: PropTypes.any,
-    message: PropTypes.string
-  })).isRequired,
+  validate: PropTypes.arrayOf(
+    PropTypes.shape({
+      test: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+      params: PropTypes.any,
+      message: PropTypes.string
+    })
+  ).isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.bool
+  ]),
+  validateBeforeFirstBlur: PropTypes.bool.isRequired,
   onValidationStatusChange: PropTypes.func.isRequired,
-  valueProp: PropTypes.string.isRequired
-}
+  children: PropTypes.element
+};
 
 export default ArbitraryValidator;
