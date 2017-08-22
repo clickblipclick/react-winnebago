@@ -1,13 +1,16 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import set from 'lodash/set';
-// import { set, forEach, assign, isArray } from 'lodash';
+
+function throwError(message) {
+  throw new Error(message);
+}
 
 class Form extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = { inputs: {} };
+    this.inputs = {};
   }
 
   getChildContext() {
@@ -21,43 +24,39 @@ class Form extends PureComponent {
   }
 
   hideMessage(name) {
-    this.state.inputs[name].message.hide();
+    this.inputs[name].message.hide();
   }
 
   onValidate(name, isValid, messageText) {
-    console.log(name, isValid, messageText);
-    let currentState = this.state;
-    console.log(currentState.inputs);
-    if (typeof currentState.inputs[name].message !== 'undefined') {
-      currentState.inputs[name].message.show(messageText);
+    if (typeof this.inputs[name].message !== 'undefined') {
+      this.inputs[name].message.show(messageText);
     }
   }
 
   storeInputWrapper(component) {
     if ((component._type !== 'radio' && component._type !== 'checkbox') || typeof React.Children.only(component.props.children).props.checked !== 'undefined') {
-      let currentState = this.state;
-      set(currentState.inputs, component.props.name + '.component', component);
-      this.setState(currentState);
+      if (typeof this.inputs[component.props.name] !== 'undefined') {
+        throwError(`There are multiple validation elements with the same name: ${component.props.name}`);
+      }
+      set(this.inputs, component.props.name + '.component', component);
     }
   }
 
   removeInputWrapper(component) {
     if (component._type !== 'radio' && component._type !== 'checkbox') {
-      let currentState = this.state;
-      delete currentState.inputs[component.props.name];
-      this.setState(currentState);
+      delete this.inputs[component.props.name];
     }
   }
 
   storeMessage(component) {
-    let currentState = this.state;
-    set(currentState.inputs, component.props.for + '.message', component);
-    console.log(currentState.inputs);
-    this.setState(currentState);
+    if (typeof this.inputs[component.props.for] !== 'undefined' && typeof this.inputs[component.props.for].message !== 'undefined') {
+      throwError(`There are multiple message elements with the same name: ${component.props.for}`);
+    }
+    set(this.inputs, component.props.for + '.message', component);
   }
 
   validate() {
-    const { inputs } = this.state;
+    const { inputs } = this;
     let formIsValid = true,
       focusedOne = false;
 
@@ -81,7 +80,7 @@ class Form extends PureComponent {
     if (arguments.length && typeof arguments[0] === 'string') {
       const input = inputs[arguments[0]];
       if (typeof input === 'undefined') {
-        throw new Error('"' + arguments[0] + '" is not a validation target on this form.');
+        throw new Error(`"${arguments[0]}" is not a validation target on this form.`);
       }
       if (!input.component.validate()) {
         input.component.focus();
@@ -113,7 +112,9 @@ class Form extends PureComponent {
   getProps() {
     return Object.assign({}, this.props, {
       onSubmit: (e) => {
-        e.preventDefault();
+        if (!this.validate()) {
+          e.preventDefault();
+        }
         if (this.validate()) {
           this.props.onSubmit(e);
         }

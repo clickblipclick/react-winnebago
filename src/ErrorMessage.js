@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class ErrorMessage extends React.Component {
+class ErrorMessage extends Component {
 
   constructor(props) {
     super(props);
@@ -14,7 +14,9 @@ class ErrorMessage extends React.Component {
 
   getElementProps() {
     const props = Object.assign({}, this.props);
-    props.htmlFor = props.for;
+    if (props.element === 'label') {
+      props.htmlFor = props.for;
+    }
     delete props.element;
     delete props.for;
     return props;
