@@ -1,9 +1,9 @@
 /* Main Elements */
 
-import ErrorMessage from './ErrorMessage';
 import Form from './Form';
 import InputWrapper from './InputWrapper';
 import ArbitraryValidator from './ArbitraryValidator';
+import ErrorMessage from './ErrorMessage';
 
 export {
   ErrorMessage,

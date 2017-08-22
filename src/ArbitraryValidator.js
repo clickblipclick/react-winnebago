@@ -1,5 +1,6 @@
 import React, { Component, Children } from 'react';
 import PropTypes from 'prop-types';
+import isFunction from 'lodash/isFunction';
 
 class ArbitraryValidator extends Component {
 

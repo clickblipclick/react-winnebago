@@ -12,6 +12,10 @@ class ErrorMessage extends Component {
     this.context.registerMessage(this);
   }
 
+  componentWillUnmount() {
+    this.context.unregisterMessage(this);
+  }
+
   getElementProps() {
     const props = Object.assign({}, this.props);
     if (props.element === 'label') {

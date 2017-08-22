@@ -8,6 +8,19 @@ import { isRequired, isInteger, isMaxLength, isMinLength } from './helpers/valid
 import some from 'lodash/some';
 import findIndex from 'lodash/findIndex';
 
+const TextInput = ({ name, value, onChange }) => (
+  <div>
+    <label htmlFor={name}>First Name</label>
+    <InputWrapper name={name} validate={[{
+      test: isRequired,
+      message: 'Sorry, this field is required.'
+    }]}>
+      <input id={name} type="text" name={name} value={value} onChange={onChange} />
+    </InputWrapper>
+    <ErrorMessage className="error-message" for={name} />
+  </div>
+);
+
 class Demo extends Component {
   constructor(props) {
     super(props);
@@ -20,7 +33,8 @@ class Demo extends Component {
         { label: 'Apples', name: 'apples', checked: false },
         { label: 'Oranges', name: 'oranges', checked: false },
         { label: 'Onions', name: 'onions', checked: false }
-      ]
+      ],
+      select: ''
     };
   }
 
@@ -32,30 +46,14 @@ class Demo extends Component {
   }
 
   render() {
-    const { fName, lName, age, about, likes } = this.state;
+    const { fName, lName, age, about, likes, select } = this.state;
     return <div>
       <h1>Winnebago Demo</h1>
-      <Form onSubmit={(e) => { e.preventDefault(); }}>
-        <div>
-          <label htmlFor="first-name">First Name</label>
-          <InputWrapper name="first-name" validate={[{
-            test: isRequired,
-            message: 'Sorry, this field is required.'
-          }]}>
-            <input id="first-name" type="text" name="first-name" value={fName} onChange={(e) => this.setState({ fName: e.target.value })} />
-          </InputWrapper>
-          <ErrorMessage element="div" className="error-message" for="first-name" />
-        </div>
-        <div>
-          <label htmlFor="last-name">Last Name</label>
-          <InputWrapper name="last-name" validate={[{
-            test: isRequired,
-            message: 'Sorry, this field is required.'
-          }]}>
-            <input id="last-name" type="text" name="last-name" value={lName} onChange={(e) => this.setState({ lName: e.target.value })}  />
-          </InputWrapper>
-          <ErrorMessage className="error-message" for="last-name" />
-        </div>
+      <Form
+        onSubmit={(e) => { console.log(e); e.preventDefault(); }}
+        onValidate={() => { console.log('on validation fail') }}>
+        <TextInput name="first-name" value={fName} onChange={(e) => this.setState({ fName: e.target.value })} />
+        <TextInput name="last-name" value={lName} onChange={(e) => this.setState({ lName: e.target.value })} />
         <div>
           <label htmlFor="age">Age</label>
           <InputWrapper name="age" validate={[{
@@ -101,13 +99,25 @@ class Demo extends Component {
             name="likes"
             value={likes}
             validate={[{
-              test: (value) => {
-                console.log(some(value, 'checked'));
-                return some(value, 'checked');
-              },
+              test: (value) => some(value, 'checked'),
               message: 'Please select at least one.'
             }]} />
           <ErrorMessage className="error-message" for="likes" />
+        </div>
+        <div>
+          <label htmlFor="select-box">Select One</label>
+          <InputWrapper name="select-box" validate={[{
+            test: isRequired,
+            message: 'Please make a selection'
+          }]}>
+            <select id="select-box" value={select} onChange={(e) => this.setState({ select: e.target.value })}>
+              <option value=""></option>
+              <option value="one">One</option>
+              <option value="two">Two</option>
+              <option value="three">Three</option>
+            </select>
+          </InputWrapper>
+          <ErrorMessage className="error-message" for="select-box" />
         </div>
         <input type="submit" value="Let's Go!" />
       </Form>
