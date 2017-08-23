@@ -55,7 +55,7 @@
   "author": "Ben Nyberg",
   "homepage": "https://heyben.com",
   "license": "MIT",
-  "repository": "git@github.com:clickblipclick/react-winnebago.git",
+  "repository": "https://github.com/clickblipclick/react-winnebago.git",
   "keywords": [
     "react-component"
   ]
