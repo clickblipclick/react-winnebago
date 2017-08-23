@@ -52,10 +52,10 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1"
   },
-  "author": "",
-  "homepage": "",
+  "author": "Ben Nyberg",
+  "homepage": "https://heyben.com",
   "license": "MIT",
-  "repository": "",
+  "repository": "git@github.com:clickblipclick/react-winnebago.git",
   "keywords": [
     "react-component"
   ]
