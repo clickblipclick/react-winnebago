@@ -1,0 +1,114 @@
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 100%;
+}
+
+#demo {
+  width: 95%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2em 0;
+}
+
+.form-field {
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.form-field label {
+  display: block;
+  font-size: .8em;
+  margin-bottom: .2em;
+  line-height: 1.25em;
+}
+
+.form-field label.error-message {
+  position: absolute;
+  top: -.625em;
+  right: 0;
+  background: red;
+  color: #fff;
+  padding: .5em;
+  border-radius: .5em;
+  line-height: 1em;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  background: #f6f3f3;
+  border: 1px solid #999;
+  width: 100%;
+  padding: .2em;
+  font-size: 2em;
+}
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  -webkit-appearance: none;
+  outline: none;
+  border: 0;
+  font-size: 1.25em;
+  padding: .5em;
+  background-color: green;
+  color: #fff;
+  cursor: pointer;
+}
+
+
+.form-field input:focus,
+.form-field textarea:focus {
+  background: #fff;
+  border: 1px solid #999;
+  width: 100%;
+}
+
+.form-field input.invalid,
+.form-field textarea.invalid {
+  border: 1px solid red;
+}
+
+.checkboxes {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.checkbox {
+  display: flex;
+  flex: 1 1 20%;
+  align-items: flex-end;
+  padding: 1em 0;
+}
+
+.checkbox label {
+  font-size: 1em;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.checkbox input {
+  margin-left: .25em;
+  cursor: pointer;
+}
+
+.message {
+  padding: 1em;
+  background: #c4f4b5;
+  border: 1px solid #5abf3b;
+}
+
+.json {
+  white-space: pre-wrap;
+  font-family: monospace;
+}

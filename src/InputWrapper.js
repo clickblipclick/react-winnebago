@@ -45,10 +45,12 @@ class InputWrapper extends Component {
   }
 
   storeOriginalProps() {
+    const eventProps = ["onBlur", "onFocus", "onChange"];
     const inputComponent = Children.only(this.props.children);
     for (var prop in inputComponent.props) {
-      let newPropName = `_${prop}`;
-      this[newPropName] = inputComponent.props[prop];
+      if (eventProps.indexOf(prop) !== -1) {
+        this[`_${prop}`] = inputComponent.props[prop];
+      }
     }
   }
 
@@ -141,11 +143,11 @@ class InputWrapper extends Component {
   }
 
   render() {
-    const { invalidClassName } = this.props;
+    const { invalidClassName, children } = this.props;
     const { isValid, validatedOnce } = this.state;
 
     // InputWrapper takes only one component
-    const inputComponent = React.Children.only(this.props.children);
+    const inputComponent = Children.only(children);
 
     const classNames = [inputComponent.props.className];
 
@@ -162,16 +164,6 @@ class InputWrapper extends Component {
       onFocus: this.onFocus.bind(this),
       onChange: this.onChange.bind(this)
     };
-
-    if (
-      (inputComponent.props.type === "radio" ||
-        inputComponent.props.type === "checkbox") &&
-      this.isCheckbox()
-    ) {
-      Object.assign(props, {
-        checked: this.context.isChecked(inputComponent.props.value)
-      });
-    }
 
     return React.cloneElement(inputComponent, props);
   }

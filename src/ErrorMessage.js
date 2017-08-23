@@ -55,7 +55,8 @@ ErrorMessage.propTypes = {
 };
 
 ErrorMessage.contextTypes = {
-  registerMessage: PropTypes.func.isRequired
+  registerMessage: PropTypes.func.isRequired,
+  unregisterMessage: PropTypes.func.isRequired
 };
 
 export default ErrorMessage;

@@ -18,7 +18,7 @@ class Form extends PureComponent {
     return {
       registerWrapper: component => this.registerWrapper(component),
       unregisterWrapper: component => this.unregisterWrapper(component),
-      registerMessage: component => this.storeMessage(component),
+      registerMessage: component => this.registerMessage(component),
       unregisterMessage: component => this.unregisterMessage(component),
       showMessage: name => this.showMessage(name),
       hideMessage: name => this.hideMessage(name),
@@ -27,17 +27,23 @@ class Form extends PureComponent {
     };
   }
 
-  showMessage(name) {
-    this.inputs[name].message.show();
+  showMessage(name, text) {
+    if (this.inputs[name].message !== "undefined") {
+      this.inputs[name].message.show(text);
+    }
   }
 
   hideMessage(name) {
-    this.inputs[name].message.hide();
+    if (this.inputs[name].message !== "undefined") {
+      this.inputs[name].message.hide();
+    }
   }
 
   onValidate(name, isValid, messageText) {
-    if (typeof this.inputs[name].message !== "undefined") {
-      this.inputs[name].message.show(messageText);
+    if (!isValid) {
+      this.showMessage(name, messageText);
+    } else {
+      this.hideMessage(name);
     }
   }
 
@@ -55,7 +61,7 @@ class Form extends PureComponent {
     delete this.inputs[component.props.name];
   }
 
-  storeMessage(component) {
+  registerMessage(component) {
     if (
       typeof this.inputs[component.props.for] !== "undefined" &&
       typeof this.inputs[component.props.for].message !== "undefined"
@@ -66,6 +72,12 @@ class Form extends PureComponent {
       );
     }
     set(this.inputs, component.props.for + ".message", component);
+  }
+
+  unregisterMessage(component) {
+    if (typeof this.inputs[component.props.name] !== "undefined") {
+      delete this.inputs[component.props.name].message;
+    }
   }
 
   validate() {
@@ -125,6 +137,10 @@ class Form extends PureComponent {
     return formIsValid;
   }
 
+  validateInput(name) {
+    return this.inputs[name].validate();
+  }
+
   render() {
     const { onSubmit, onValidate, ...props } = this.props;
 
@@ -134,7 +150,9 @@ class Form extends PureComponent {
         {
           onSubmit: e => {
             if (this.validate()) {
-              onSubmit(e);
+              if (typeof onSubmit === "function") {
+                onSubmit(e);
+              }
             } else {
               e.preventDefault();
             }
@@ -151,7 +169,7 @@ Form.defaultProps = {
 };
 
 Form.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func,
   onValidate: PropTypes.func
 };
 
