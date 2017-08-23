@@ -1,13 +1,27 @@
 {
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+        "jsx": true,
+        "modules": true,
+        "experimentalObjectRestSpread": true
+    }
+  },
   "extends": [
-    "react",
+    "eslint:recommended",
+    "plugin:react/recommended",
     "prettier"
   ],
   "plugins": [
+    "react",
     "prettier"
   ],
   "rules": {
     "prettier/prettier": "error",
     "prefer-reflect": 0
+  },
+  "env": {
+    "browser": true
   }
 }

@@ -38,11 +38,8 @@ class InputWrapper extends Component {
   }
 
   componentWillUnmount() {
-    if (
-      typeof this.refs.input !== "undefined" &&
-      isFunction(this.refs.input.blur)
-    ) {
-      this.refs.input.blur();
+    if (typeof this.input !== "undefined" && isFunction(this.input.blur)) {
+      this.input.blur();
     }
     this.context.unregisterWrapper(this);
   }
@@ -113,8 +110,8 @@ class InputWrapper extends Component {
   }
 
   focus() {
-    if (isFunction(this.refs.input.focus)) {
-      this.refs.input.focus();
+    if (isFunction(this.input.focus)) {
+      this.input.focus();
     }
   }
 
@@ -158,7 +155,9 @@ class InputWrapper extends Component {
 
     const props = {
       className: classNames.join(" "),
-      ref: "input",
+      ref: element => {
+        this.input = element;
+      },
       onBlur: this.onBlur.bind(this),
       onFocus: this.onFocus.bind(this),
       onChange: this.onChange.bind(this)
@@ -191,7 +190,8 @@ InputWrapper.defaultProps = {
   invalidClassName: "invalid",
   validateBeforeFirstBlur: false,
   valueProp: "value",
-  onValidationStatusChange: function() {}
+  onValidationStatusChange: function() {},
+  onValidate: function() {}
 };
 
 InputWrapper.propTypes = {
@@ -206,6 +206,7 @@ InputWrapper.propTypes = {
   invalidClassName: PropTypes.string,
   validateBeforeFirstBlur: PropTypes.bool.isRequired,
   onValidationStatusChange: PropTypes.func.isRequired,
+  onValidate: PropTypes.func.isRequired,
   valueProp: PropTypes.string.isRequired,
   children: PropTypes.element.isRequired
 };

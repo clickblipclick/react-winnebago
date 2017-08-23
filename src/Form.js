@@ -126,7 +126,8 @@ class Form extends PureComponent {
   }
 
   render() {
-    const { onSubmit, ...props } = this.props;
+    const { onSubmit, onValidate, ...props } = this.props;
+
     return React.createElement(
       "form",
       Object.assign(
@@ -144,6 +145,10 @@ class Form extends PureComponent {
     );
   }
 }
+
+Form.defaultProps = {
+  onValidate: () => {}
+};
 
 Form.propTypes = {
   onSubmit: PropTypes.func.isRequired,
