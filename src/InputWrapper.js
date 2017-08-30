@@ -179,7 +179,7 @@ InputWrapper.contextTypes = {
 };
 
 InputWrapper.defaultProps = {
-  invalidClassName: "invalid",
+  invalidClassName: "",
   validateBeforeFirstBlur: false,
   valueProp: "value",
   onValidationStatusChange: function() {},
@@ -191,7 +191,7 @@ InputWrapper.propTypes = {
   validate: PropTypes.arrayOf(
     PropTypes.shape({
       test: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
-      params: PropTypes.any,
+      params: PropTypes.arrayOf(PropTypes.any),
       message: PropTypes.string
     })
   ).isRequired,

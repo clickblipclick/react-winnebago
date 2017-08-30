@@ -51,7 +51,8 @@ ErrorMessage.defaultProps = {
 };
 
 ErrorMessage.propTypes = {
-  element: PropTypes.oneOf(["div", "label", "span", "aside", "section"])
+  element: PropTypes.oneOf(["div", "label", "span", "aside", "section"]),
+  for: PropTypes.string.isRequired
 };
 
 ErrorMessage.contextTypes = {

@@ -117,7 +117,6 @@ ArbitraryValidator.contextTypes = {
 };
 
 ArbitraryValidator.defaultProps = {
-  invalidClassName: "invalid",
   validateBeforeFirstBlur: false,
   onValidationStatusChange: function() {}
 };
@@ -127,7 +126,7 @@ ArbitraryValidator.propTypes = {
   validate: PropTypes.arrayOf(
     PropTypes.shape({
       test: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
-      params: PropTypes.any,
+      params: PropTypes.arrayOf(PropTypes.any),
       message: PropTypes.string
     })
   ).isRequired,
@@ -139,8 +138,7 @@ ArbitraryValidator.propTypes = {
     PropTypes.bool
   ]),
   validateBeforeFirstBlur: PropTypes.bool.isRequired,
-  onValidationStatusChange: PropTypes.func.isRequired,
-  children: PropTypes.element
+  onValidationStatusChange: PropTypes.func.isRequired
 };
 
 export default ArbitraryValidator;
