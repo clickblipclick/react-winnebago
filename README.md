@@ -81,7 +81,7 @@ Exports:
 
 ---
 
-### <Form />
+### &lt;Form />
 
 #### Usage
 
@@ -103,7 +103,7 @@ Optional. This runs every time the form validation is run with the first argumen
 
 All other props are passed to a `<form />` element.
 
-### <InputWrapper />
+### &lt;InputWrapper />
 
 #### Usage
 
@@ -147,7 +147,7 @@ Optional. If true, the element will validate as soon as it changes the first tim
 
 Optional. When the state of the child input changes from valid to invalid or vice-versa, this function is called.
 
-### <ArbitraryValidator />
+### &lt;ArbitraryValidator />
 
 #### Usage
 
@@ -186,7 +186,7 @@ Optional. If true, the element will validate as soon as it changes the first tim
 Optional. When the state of the child input changes from valid to invalid or vice-versa, this function is called.
 
 
-### <ErrorMessage />
+### &lt;ErrorMessage />
 
 #### Usage
 
